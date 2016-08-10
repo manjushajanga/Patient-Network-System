@@ -1,0 +1,944 @@
+drop schema if exists sampledb;
+create schema if not exists sampledb;
+CREATE TABLE `sampledb`.`patients` (
+  `pid` INT(3) ZEROFILL NOT NULL  AUTO_INCREMENT COMMENT '',
+  `fname` VARCHAR(45) NOT NULL COMMENT '',
+  `lname` VARCHAR(45) NOT NULL COMMENT '',
+  `gender` VARCHAR(1) NOT NULL COMMENT '',
+  `dob` DATE NOT NULL COMMENT '',
+  `email` VARCHAR(45) NOT NULL COMMENT '',
+  `password` CHAR(32) NOT NULL COMMENT '',
+  PRIMARY KEY (`pid`)  COMMENT '',
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC)  COMMENT '');
+alter table `sampledb`.`patients` auto_increment=001;
+CREATE TABLE `sampledb`.`symptoms` (
+  `sid` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `sname` VARCHAR(45) NOT NULL COMMENT '',
+  `sdescription` VARCHAR(100) NULL COMMENT '',
+   PRIMARY KEY (`sid`)  COMMENT '',
+   UNIQUE KEY `sname_UNIQUE` (`sname`)
+  );
+CREATE TABLE `sampledb`.`conditions` (
+  `cid` int(11) NOT NULL AUTO_INCREMENT,
+  `cname` varchar(45) NOT NULL,
+  `cdescription` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`cid`),
+  UNIQUE KEY `cname_UNIQUE` (`cname`)
+);
+
+    
+CREATE TABLE `sampledb`.`pat_conditions` (
+  `cid` int(11) NOT NULL,
+  `atime` datetime NOT NULL,
+  `dtime` datetime DEFAULT NULL,
+  `pid` int(3) unsigned zerofill NOT NULL,
+  `insert_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`cid`,`atime`,`pid`),
+  KEY `pid2` (`pid`),
+  CONSTRAINT `cid2` FOREIGN KEY (`cid`) REFERENCES `sampledb`.`conditions` (`cid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `pid2` FOREIGN KEY (`pid`) REFERENCES `sampledb`.`patients` (`pid`) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE `sampledb`.`pat_symptoms` (
+  `sid` int(11) NOT NULL,
+  `atime` datetime NOT NULL,
+  `dtime` datetime DEFAULT NULL,
+  `pid` int(3) unsigned zerofill NOT NULL,
+  `insert_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`sid`,`atime`,`pid`),
+  KEY `pid1` (`pid`),
+  CONSTRAINT `pid1` FOREIGN KEY (`pid`) REFERENCES `sampledb`.`patients` (`pid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `sid1` FOREIGN KEY (`sid`) REFERENCES `sampledb`.`symptoms` (`sid`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+       CREATE TABLE `sampledb`.`message` (
+  `mid` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `senderid` INT(3) ZEROFILL NOT NULL COMMENT '',
+  `recvid` INT(3) ZEROFILL NOT NULL COMMENT '',
+  `stime` DATETIME NOT NULL COMMENT '',
+  `subject` VARCHAR(400) NULL COMMENT '',
+  `content` VARCHAR(1000) NULL COMMENT '',
+  PRIMARY KEY (`mid`)  COMMENT '',
+  INDEX `sendid_idx` (`senderid` ASC)  COMMENT '',
+  INDEX `recvid_idx` (`recvid` ASC)  COMMENT '',
+  CONSTRAINT `sendid`
+    FOREIGN KEY (`senderid`)
+    REFERENCES `sampledb`.`patients` (`pid`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `recvid`
+    FOREIGN KEY (`recvid`)
+    REFERENCES `sampledb`.`patients` (`pid`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `sampledb`.`treatment` (
+  `tid` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `tname` VARCHAR(45) NOT NULL COMMENT '',
+  `tdescription` VARCHAR(100) NULL COMMENT '',
+  PRIMARY KEY (`tid`)  COMMENT '',
+  UNIQUE KEY `tname_UNIQUE` (`tname`));
+    
+CREATE TABLE `sampledb`.`pat_treatment` (
+  `tid` int(11) NOT NULL,
+  `atime` datetime NOT NULL,
+  `dtime` datetime DEFAULT NULL,
+  `pid` int(3) unsigned zerofill NOT NULL,
+  `insert_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`tid`,`atime`,`pid`),
+  KEY `pid3` (`pid`),
+  CONSTRAINT `pid3` FOREIGN KEY (`pid`) REFERENCES `sampledb`.`patients` (`pid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `tid3` FOREIGN KEY (`tid`) REFERENCES `sampledb`.`treatment` (`tid`) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+    
+INSERT INTO `sampledb`.`patients`
+(`fname`,
+`lname`,
+`gender`,
+`dob`,
+`email`,
+`password`)
+VALUES
+(
+'Chandler',
+'Bing',
+'m',
+'19911003',
+'bing@gmail.com',
+'test');
+INSERT INTO `sampledb`.`patients`
+(`fname`,
+`lname`,
+`gender`,
+`dob`,
+`email`,
+`password`)
+VALUES
+(
+'Phoebe',
+'Buffey',
+'f',
+'19910127',
+'phoebe@gmail.com',
+'test');
+INSERT INTO `sampledb`.`patients`
+(`fname`,
+`lname`,
+`gender`,
+`dob`,
+`email`,
+`password`)
+VALUES
+(
+'Lee',
+'Cooper',
+'m',
+'19940520',
+'lee@gmail.com',
+'test');
+INSERT INTO `sampledb`.`patients`
+(`fname`,
+`lname`,
+`gender`,
+`dob`,
+`email`,
+`password`)
+VALUES
+(
+'Johny',
+'Bravo',
+'f',
+'19910315',
+'anu@gmail.com',
+'test');
+INSERT INTO `sampledb`.`patients`
+(`fname`,
+`lname`,
+`gender`,
+`dob`,
+`email`,
+`password`)
+VALUES
+(
+'Sheldon',
+'Cooper',
+'m',
+'19870503',
+'sheldon@gmail.com',
+'test');
+INSERT INTO `sampledb`.`patients`
+(`fname`,
+`lname`,
+`gender`,
+`dob`,
+`email`,
+`password`)
+VALUES
+(
+'Rachel',
+'Green',
+'f',
+'19951212',
+'rachel@gmail.com',
+'test');
+INSERT INTO `sampledb`.`patients`
+(`fname`,
+`lname`,
+`gender`,
+`dob`,
+`email`,
+`password`)
+VALUES
+(
+'ross',
+'gellar',
+'m',
+'19720121',
+'ross@gmail.com',
+'test');
+INSERT INTO `sampledb`.`patients`
+(`fname`,
+`lname`,
+`gender`,
+`dob`,
+`email`,
+`password`)
+VALUES
+(
+'monica',
+'gellar',
+'f',
+'19800825',
+'monica@gmail.com',
+'test');
+INSERT INTO `sampledb`.`patients`
+(`fname`,
+`lname`,
+`gender`,
+`dob`,
+`email`,
+`password`)
+VALUES
+(
+'Joey',
+'Tribbiani',
+'m',
+'19860526',
+'joey@gmail.com',
+'test');
+INSERT INTO `sampledb`.`patients`
+(`fname`,
+`lname`,
+`gender`,
+`dob`,
+`email`,
+`password`)
+VALUES
+(
+'Dr.',
+'Lightman',
+'m',
+'19860526',
+'lightman@gmail.com',
+'test');
+INSERT INTO `sampledb`.`symptoms`
+(`sname`,
+`sdescription`)
+VALUES
+(
+'cough',
+'cough throughout the day');
+INSERT INTO `sampledb`.`symptoms`
+(`sname`,
+`sdescription`)
+VALUES
+(
+'cold',
+'bad cold');
+INSERT INTO `sampledb`.`symptoms`
+(`sname`,
+`sdescription`)
+VALUES
+(
+'itchiness of eyes',
+'watery eyes and itchiness');
+INSERT INTO `sampledb`.`symptoms`
+(`sname`,
+`sdescription`)
+VALUES
+(
+'body pain',
+'hand, leg pain');
+INSERT INTO `sampledb`.`symptoms`
+(`sname`,
+`sdescription`)
+VALUES
+(
+'skin rash',
+'subtle rash on skin');
+INSERT INTO `sampledb`.`symptoms`
+(`sname`,
+`sdescription`)
+VALUES
+(
+'dry skin',
+'dry and itchy skin');
+INSERT INTO `sampledb`.`symptoms`
+(`sname`,
+`sdescription`)
+VALUES
+(
+'insomnia',
+'not able to sleep');
+INSERT INTO `sampledb`.`symptoms`
+(`sname`,
+`sdescription`)
+VALUES
+(
+'fatigue',
+'weak feeling');
+INSERT INTO `sampledb`.`symptoms`
+(`sname`,
+`sdescription`)
+VALUES
+(
+'headache',
+'continuous headache');
+INSERT INTO `sampledb`.`symptoms`
+(`sname`,
+`sdescription`)
+VALUES
+(
+'restlessness',
+'not able to concentrate');
+INSERT INTO `sampledb`.`symptoms`
+(`sname`,
+`sdescription`)
+VALUES
+(
+'hair loss',
+'hair strength is reducing');
+INSERT INTO `sampledb`.`pat_symptoms`
+(`sid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+1,
+'20140502',
+'20151030',
+001);
+
+INSERT INTO `sampledb`.`pat_symptoms`
+(`sid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+2,
+'20140502',
+'20151030',
+010);
+
+INSERT INTO `sampledb`.`pat_symptoms`
+(`sid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+3,
+'20140502',
+'20151030',
+001);
+INSERT INTO `sampledb`.`pat_symptoms`
+(`sid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+4,
+'20140502',
+'20151030',
+006);
+INSERT INTO `sampledb`.`pat_symptoms`
+(`sid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+5,
+'20140502',
+'20151030',
+008);
+INSERT INTO `sampledb`.`pat_symptoms`
+(`sid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+6,
+'20140502',
+'20151030',
+004);
+INSERT INTO `sampledb`.`pat_symptoms`
+(`sid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+7,
+'20140502',
+'20151030',
+009);
+INSERT INTO `sampledb`.`pat_symptoms`
+(`sid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+8,
+'20140502',
+'20151030',
+003);
+INSERT INTO `sampledb`.`pat_symptoms`
+(`sid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+9,
+'20140502',
+'20151030',
+008);
+INSERT INTO `sampledb`.`pat_symptoms`
+(`sid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+10,
+'20140502',
+'20151030',
+007);
+INSERT INTO `sampledb`.`message`
+(`senderid`,
+`recvid`,
+`stime`,
+`subject`,
+`content`)
+VALUES
+(
+001,
+002,
+'20140205',
+'help needed',
+'Hi, 
+I need to know who was your doctor?');
+INSERT INTO `sampledb`.`message`
+(`senderid`,
+`recvid`,
+`stime`,
+`subject`,
+`content`)
+VALUES
+(
+006,
+002,
+'20150205',
+'help',
+'Hi, 
+Can you share your phone number?');
+INSERT INTO `sampledb`.`message`
+(`senderid`,
+`recvid`,
+`stime`,
+`subject`,
+`content`)
+VALUES
+(
+002,
+001,
+'20140306',
+'help needed: reply',
+'Hi, 
+Dr, Smith is my doctor :)');
+INSERT INTO `sampledb`.`message`
+(`senderid`,
+`recvid`,
+`stime`,
+`subject`,
+`content`)
+VALUES
+(
+003,
+004,
+'20140205',
+'help me',
+'Hi, can you tell me about your insurance?');
+INSERT INTO `sampledb`.`message`
+(`senderid`,
+`recvid`,
+`stime`,
+`subject`,
+`content`)
+VALUES
+(
+005,
+006,
+'20140205',
+'hello',
+'Hi, 
+I need to know who is your doctor for physiotherapy?');
+INSERT INTO `sampledb`.`message`
+(`senderid`,
+`recvid`,
+`stime`,
+`subject`,
+`content`)
+VALUES
+(
+006,
+005,
+'20140205',
+'My doctor',
+'Hi, Dr. Lightman :)');
+INSERT INTO `sampledb`.`message`
+(`senderid`,
+`recvid`,
+`stime`,
+`subject`,
+`content`)
+VALUES
+(
+001,
+002,
+'20150205',
+'Thank you',
+'Thank you for you help!');
+INSERT INTO `sampledb`.`message`
+(`senderid`,
+`recvid`,
+`stime`,
+`subject`,
+`content`)
+VALUES
+(
+004,
+005,
+'20140205',
+'help needed',
+'Hi, I get severe headache, what do you think I should do?');
+INSERT INTO `sampledb`.`message`
+(`senderid`,
+`recvid`,
+`stime`,
+`subject`,
+`content`)
+VALUES
+(
+001,
+002,
+'20140205',
+'How are you?',
+'Hi, how are you? :)');
+INSERT INTO `sampledb`.`message`
+(`senderid`,
+`recvid`,
+`stime`,
+`subject`,
+`content`)
+VALUES
+(
+001,
+002,
+'20151005',
+'Car pooling request',
+'Can I come with you to the hospital??');
+INSERT INTO `sampledb`.`message`
+(`senderid`,
+`recvid`,
+`stime`,
+`subject`,
+`content`)
+VALUES
+(
+005,
+007,
+'20150305',
+'help me please',
+'Hi, Please let me know when can I contact you?');
+
+INSERT INTO `sampledb`.`conditions`
+(`cname`,
+`cdescription`)
+VALUES
+(
+'diabetes',
+'Body is unable to properly use and store glucose.');
+INSERT INTO `sampledb`.`conditions`
+(`cname`,
+`cdescription`)
+VALUES
+(
+'spondilitis',
+'Strong back ache');
+INSERT INTO `sampledb`.`conditions`
+(`cname`,
+`cdescription`)
+VALUES
+(
+'asthama',
+'Frequent breathlessness');
+INSERT INTO `sampledb`.`conditions`
+(`cname`,
+`cdescription`)
+VALUES
+(
+'bronchitis','bronchitis');
+INSERT INTO `sampledb`.`conditions`
+(`cname`,
+`cdescription`)
+VALUES
+(
+'throat infection',
+'throat sore and feverish');
+INSERT INTO `sampledb`.`conditions`
+(`cname`,
+`cdescription`)
+VALUES
+(
+'Arthritis',
+'body ache continuously');
+INSERT INTO `sampledb`.`conditions`
+(`cname`,
+`cdescription`)
+VALUES
+(
+'eyesore',
+'eye irritation');
+INSERT INTO `sampledb`.`conditions`
+(`cname`,
+`cdescription`)
+VALUES
+(
+'chronic cough',
+'cough');
+INSERT INTO `sampledb`.`conditions`
+(`cname`,
+`cdescription`)
+VALUES
+(
+'fever',
+'high temperature');
+INSERT INTO `sampledb`.`conditions`
+(`cname`,
+`cdescription`)
+VALUES
+(
+'cough','cough');
+INSERT INTO `sampledb`.`pat_conditions`
+(`cid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+1,
+'20140502',
+'20151030',
+006);
+INSERT INTO `sampledb`.`pat_conditions`
+(`cid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+2,
+'20140602',
+'20151030',
+007);
+
+INSERT INTO `sampledb`.`pat_conditions`
+(`cid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+1,
+'20140702',
+'20150930',
+002);
+INSERT INTO `sampledb`.`pat_conditions`
+(`cid`,
+`atime`,
+`pid`)
+VALUES
+(
+1,
+'20140802',
+002);
+INSERT INTO `sampledb`.`pat_conditions`
+(`cid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+5,
+'20140302',
+'20150930',
+001);
+INSERT INTO `sampledb`.`pat_conditions`
+(`cid`,
+`atime`,
+`pid`)
+VALUES
+(
+6,
+'20140902',
+001);
+INSERT INTO `sampledb`.`pat_conditions`
+(`cid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+7,
+'20141002',
+'20150930',
+001);
+INSERT INTO `sampledb`.`pat_conditions`
+(`cid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+8,
+'20141102',
+'20151030',
+003);
+INSERT INTO `sampledb`.`pat_conditions`
+(`cid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+9,
+'20140507',
+'20151030',
+003);
+INSERT INTO `sampledb`.`pat_conditions`
+(`cid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+10,
+'20140511',
+'20151030',
+004);
+
+
+INSERT INTO `sampledb`.`treatment`
+(`tname`,
+`tdescription`)
+VALUES
+(
+'physical therapy',
+'physiotherapy');
+INSERT INTO `sampledb`.`treatment`
+(`tname`,
+`tdescription`)
+VALUES
+(
+'medicines paracetamol',
+'medicines');
+INSERT INTO `sampledb`.`treatment`
+(`tname`,
+`tdescription`)
+VALUES
+(
+'meds',
+'combiflam');
+INSERT INTO `sampledb`.`treatment`
+(`tname`,
+`tdescription`)
+VALUES
+(
+'therapist',
+'health suggestion');
+INSERT INTO `sampledb`.`treatment`
+(`tname`,
+`tdescription`)
+VALUES
+(
+'Yoga',
+'exercise: yoga');
+INSERT INTO `sampledb`.`treatment`
+(`tname`,
+`tdescription`)
+VALUES
+(
+'exercise',
+'exercise classes');
+INSERT INTO `sampledb`.`treatment`
+(`tname`,
+`tdescription`)
+VALUES
+(
+'nutrition therapy',
+'balanced diet');
+INSERT INTO `sampledb`.`treatment`
+(`tname`,
+`tdescription`)
+VALUES
+(
+'psychiatric treatment',
+'sessions with psychiatrist');
+INSERT INTO `sampledb`.`treatment`
+(`tname`,
+`tdescription`)
+VALUES
+(
+'surgery',
+'sinus surgery');
+INSERT INTO `sampledb`.`treatment`
+(`tname`,
+`tdescription`)
+VALUES
+(
+'routine checkups',
+'Total blood count');
+
+
+
+
+INSERT INTO `sampledb`.`pat_treatment`
+(`tid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+1,
+'20140205',
+'20150205',
+001);
+INSERT INTO `sampledb`.`pat_treatment`
+(`tid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+2,
+'20140206',
+'20150205',
+002);
+INSERT INTO `sampledb`.`pat_treatment`
+(`tid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+3,
+'20140207',
+'20140705',
+003);
+INSERT INTO `sampledb`.`pat_treatment`
+(`tid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+4,
+'20140208',
+'20150205',
+003);
+INSERT INTO `sampledb`.`pat_treatment`
+(`tid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+5,
+'20140209',
+'20150205',
+004);
+INSERT INTO `sampledb`.`pat_treatment`
+(`tid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+6,
+'20140210',
+'20150205',
+005);
+INSERT INTO `sampledb`.`pat_treatment`
+(`tid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+7,
+'20140211',
+'20150205',
+006);
+INSERT INTO `sampledb`.`pat_treatment`
+(`tid`,
+`atime`,
+`pid`)
+VALUES
+(
+1,
+'20140212',
+007);
+INSERT INTO `sampledb`.`pat_treatment`
+(`tid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+9,
+'20140213',
+'20150205',
+007);
+INSERT INTO `sampledb`.`pat_treatment`
+(`tid`,
+`atime`,
+`dtime`,
+`pid`)
+VALUES
+(
+10,
+'20140214',
+'20140305',
+007);
